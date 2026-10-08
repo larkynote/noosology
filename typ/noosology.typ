@@ -21,7 +21,7 @@
   header: context {
     let page_num = counter(page).get().first()
     if page_num > 2 {
-      align(center, text(size: 8pt, fill: gray)[ヌーソロジー ― 智慧の博覧会 ―])
+      align(center, text(size: 8pt, fill: gray)[ヌーソロジー ― 半田広宣のイデア論 ―])
     }
   },
   footer: context {
@@ -96,7 +96,7 @@
 // --- 表紙ページ ---
 #align(center + horizon)[
   #v(-30mm)
-  #text(size: 14pt, tracking: 2pt)[智慧の博覧会]
+  #text(size: 14pt, tracking: 2pt)[半田広宣のイデア論]
   
   #v(10mm)
   #text(size: 28pt, weight: "bold")[ヌーソロジー]
