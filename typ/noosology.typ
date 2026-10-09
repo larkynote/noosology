@@ -185,7 +185,7 @@
 #term-item(
   term: "ヌースコンストラクション",
   kana: "ぬうすこんすとらくしょん",
-  desc: [ヌースコンストラクション（NC:Noos Construction）。ヌーソロジーのシンボルとも言えるカタチ。 \
+  desc: [ヌースコンストラクション（NC:Noos Construction）。ヌーソロジーのシンボルとも言えるカタチ。右側の球体は自己、左側の球体は他者、中央の球体はモノを意味しています[@handa-x-fig-tetra-in-nc]。 \
 #figure(
   image("png/noos_construction_white.png", width: 70%),
   caption: [NC:ヌースコンストラクション],
@@ -229,6 +229,13 @@
 }
 
 //▼ここから参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+#bib-item(
+  author: "半田広宣",
+  title: [NCにおける自己と他者の二つの正四面体],
+  date: "2025/10/14",
+  url: "https://x.com/kohsen/status/1977960747679519013?s=20",
+  label-key: "handa-x-fig-tetra-in-nc"
+)
 
 #bib-item(
   author: "半田広宣, 春井星乃, まきしむ",
@@ -297,7 +304,6 @@
   url: "https://www.musashino.ac.jp/mgu/news/15014/",
   label-key: "kohsen-meinichi"
 )
-
 //▲ここまで参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 #pagebreak()
