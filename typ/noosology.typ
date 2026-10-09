@@ -135,6 +135,14 @@
 
 
 //▼ここから用語集■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// えぬしー
+=== NC
+#term-item(
+  term: "NC",
+  kana: "えぬしー",
+  desc: [「ヌースコンストラクション」の略。]
+)
+
 // がいめん
 === 外面
 #term-item(
@@ -149,8 +157,11 @@
   term: "ケイブコンパス",
   kana: "けいぶこんぱす",
   desc: [cave compass。直訳すると「洞窟の羅針盤」。Ψ1～Ψ10など各観察子の数字同士の関係性を確認するのに使えます。青い帯は円の下側を始点として、赤い帯は円の上側を始点としています。例えば青い帯の奇数の数字はいずれも始点は円の下側で共通なので、Ψ7の範囲は半円分、Ψ5は円の四分の1といった長さ（角度）に対応します。 \
-  #image("svg/cave_compass.svg", width: 80%)
-  ]
+#figure(
+  image("svg/cave_compass.svg", width: 80%),
+  caption: [ケイブコンパス（Ψ表示）],
+  supplement: none,
+)]
 )
 
 // とくさのかんだから
@@ -167,6 +178,19 @@
   term: "人間の外面",
   kana: "にんげんのがいめん",
   desc: [「人間の外面」は見えている空間であり、「人間の内面」は見られている空間であると言われています[@handa-x-fig-gaimen-naimen]。前者は鏡像による時空、後者は主体による持続空間と言えます[@handa-x-fig-two-apple-self]。]
+)
+
+// ぬうすこんすとらくしょん
+=== ヌースコンストラクション
+#term-item(
+  term: "ヌースコンストラクション",
+  kana: "ぬうすこんすとらくしょん",
+  desc: [ヌースコンストラクション（NC:Noos Construction）。ヌーソロジーのシンボルとも言えるカタチ。 \
+#figure(
+  image("png/noos_construction_white.png", width: 70%),
+  caption: [NC:ヌースコンストラクション],
+  supplement: none,
+) ]
 )
 
 // ぬうそろじい
