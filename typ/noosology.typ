@@ -177,6 +177,14 @@
   desc: [観察子のひとつ。]
 )
 
+// せなかあわせのじことたしゃ
+=== 背中合わせの自己と他者
+#term-item(
+  term: "背中合わせの自己と他者",
+  kana: "せなかあわせのじことたしゃ",
+  desc: [意識の次元において、自己と他者の空間は前後と上下が反転していると言われています[@handa-x-fig-b2b-tao]。ヌーソロジーの世界観と類似点の多いドゴン神話ではシリウスからやってくるノンモという精霊が登場しますが、彼らもまた背中合わせの姿をしています[@handa-x-fig-b2b-dogon]。]
+)
+
 // とくさのかんだから
 === 十種神宝
 #term-item(
@@ -354,6 +362,22 @@
   date: "2023/12/10",
   url: "https://x.com/kohsen/status/1733859400694321565?s=20",
   label-key: "handa-x-fig-b3s3"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [背中合わせの自己と他者（天上のノンモ）],
+  date: "2020/07/17",
+  url: "https://x.com/kohsen/status/1284061755451170816?s=20",
+  label-key: "handa-x-fig-b2b-dogon"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [背中合わせの自己と他者（『光の箱舟』より）],
+  date: "2021/11/16",
+  url: "https://x.com/kohsen/status/1460425280107864066?s=20",
+  label-key: "handa-x-fig-b2b-tao"
 )
 //▲ここまで参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
