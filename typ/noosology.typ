@@ -188,6 +188,14 @@
 )]
 )
 
+// さとうひろき
+=== 佐藤博紀
+#term-item(
+  term: "佐藤博紀",
+  kana: "さとうひろき",
+  desc: [ヌーソロジー研究所の名誉研究員です。2020年逝去。意識物理学研究所を主宰し、物質世界とイデアの関連について研究されていました。その成果は『物質世界とイデア』[@satohakase-book-idea]などの著作にまとめられています。また、残存するホームページ[@satohakase-hp]ではヌーソロジーのヒントにもなる研究資料が多数公開されています。]
+)
+
 // さとり
 === 悟り
 #term-item(
@@ -340,6 +348,12 @@
 )
 
 #bib-item(
+  title: [武蔵野学院大学ヌーソロジー研究所],
+  url: "https://lab.noos-academeia.com/",
+  label-key: "noosology-lab-hp"
+)
+
+#bib-item(
   author: "武蔵野学院大学ヌーソロジー研究所",
   title: [再生リスト「半田広宣（所長）」],
   url: "https://youtube.com/playlist?list=PLdqwrJECkIBUSOrHyvzoQipdxjRcH5bE2&si=IRSWdSV9pH4LMlG9",
@@ -478,6 +492,20 @@
   date: "2023/08/31",
   url: "https://x.com/kohsen/status/1697028294628258023?s=20",
   label-key: "handa-x-pentave-fuka"
+)
+
+#bib-item(
+  author: "佐藤博紀",
+  title: [『物質世界とイデア』],
+  note: [ISBN978-4907117245],
+  label-key: "satohakase-book-idea"
+)
+
+#bib-item(
+  author: "佐藤博紀",
+  title: [意識物理学研究所],
+  url: "https://newton2013.web.fc2.com/",
+  label-key: "satohakase-hp"
 )
 //▲ここまで参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
