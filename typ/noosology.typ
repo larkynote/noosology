@@ -81,8 +81,8 @@
       #if author != "" [ #strong(author), ]
       #title
       #if date != "" [ #text(size: 9pt, fill: gray.darken(30%))[（#date）] ]
-      #if note != "" [ \ #text(size: 9pt, fill: gray.darken(30%))[#note] ]
-      #if url != "" [ \ #link(url)[#text(size: 8.5pt, fill: blue.darken(20%))[#url]] ]
+      #if note != "" [  #text(size: 9pt, fill: gray.darken(30%))[#note] ]
+      #if url != "" [  #link(url)[#text(size: 8.5pt, fill: blue.darken(20%))[#url]] ]
     ]
   )
   
@@ -124,7 +124,6 @@
 #outline(
   title: [目次],
   indent: 1.5em,
-//  depth: 2
   depth: 3  // ← ここを 3 に変更（見出し3まで目次に拾わせる）
 )
 
@@ -132,8 +131,6 @@
 
 // --- 本文 ---
 = 用語集
-
-
 //▼ここから用語集■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // えぬしー
 === NC
@@ -198,7 +195,7 @@
 #term-item(
   term: "ヌーソロジー",
   kana: "ぬうそろじい",
-  desc: [ヌーソロジーとは物質と精神を空間的視点から統合する具体的なイデア論です [@handa-x] 。]
+  desc: [ヌーソロジーとは物質と精神を空間的視点から統合する具体的なイデア論です [@handa-x] 。ヌースコンストラクションが「自己、他者、モノ」を意味しているように、ヌーソロジーは自他論とも言えます[@handa-x-jitaron-ads-cft]。]
 )
 
 // はんだこうせん
@@ -218,7 +215,6 @@
 #show figure: set align(left)
 #set par(first-line-indent: 0pt)
 
-// 図表の番号の書式を [1] のようなブラケット付きに設定し、行頭に自動付与する
 #show figure.where(kind: "bib"): it => {
   let num = numbering("1", counter(figure.where(kind: "bib")).at(it.location()).first())
   
@@ -231,40 +227,9 @@
 //▼ここから参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #bib-item(
   author: "半田広宣",
-  title: [NCにおける自己と他者の二つの正四面体],
-  date: "2025/10/14",
-  url: "https://x.com/kohsen/status/1977960747679519013?s=20",
-  label-key: "handa-x-fig-tetra-in-nc"
-)
-
-#bib-item(
-  author: "半田広宣, 春井星乃, まきしむ",
-  title: [『奥行きの子供たち』],
-  note: [ISBN978-4899764939],
-  label-key: "book-depth"
-)
-
-#bib-item(
-  author: "半田広宣",
   title: [X（旧：Twitter）プロフィール],
   url: "https://x.com/kohsen",
   label-key: "handa-x"
-)
-
-#bib-item(
-  author: "半田広宣",
-  title: [「人間の外面と内面」の反転関係を表す図],
-  date: "2025/07/07",
-  url: "https://x.com/kohsen/status/1942203587557499140?s=20",
-  label-key: "handa-x-fig-gaimen-naimen"
-)
-
-#bib-item(
-  author: "半田広宣",
-  title: [⚫︎私は二人いるということを自覚すること],
-  date: "2023/09/29",
-  url: "https://x.com/kohsen/status/1707587570618777725?s=20",
-  label-key: "handa-x-fig-two-apple-self"
 )
 
 #bib-item(
@@ -280,6 +245,13 @@
   date: "2026/08/13",
   url: "https://youtu.be/L79sgGwewCc?si=dSwV73WJ8wT4AiYA",
   label-key: "noosology-lab-yt-mov-kohsen-last"
+)
+
+#bib-item(
+  author: "半田広宣, 春井星乃, まきしむ",
+  title: [『奥行きの子供たち』],
+  note: [ISBN978-4899764939],
+  label-key: "book-depth"
 )
 
 #bib-item(
@@ -303,6 +275,38 @@
   date: "2026/04/27",
   url: "https://www.musashino.ac.jp/mgu/news/15014/",
   label-key: "kohsen-meinichi"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [NCにおける自己と他者の二つの正四面体],
+  date: "2025/10/14",
+  url: "https://x.com/kohsen/status/1977960747679519013?s=20",
+  label-key: "handa-x-fig-tetra-in-nc"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [「人間の外面と内面」の反転関係を表す図],
+  date: "2025/07/07",
+  url: "https://x.com/kohsen/status/1942203587557499140?s=20",
+  label-key: "handa-x-fig-gaimen-naimen"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [⚫︎私は二人いるということを自覚すること],
+  date: "2023/09/29",
+  url: "https://x.com/kohsen/status/1707587570618777725?s=20",
+  label-key: "handa-x-fig-two-apple-self"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [AdS/CFT対応の観点で考えると、ヌーソロジーは究極の自他論と言える。],
+  date: "2025/01/28",
+  url: "https://x.com/kohsen/status/1884248591314870505?s=20",
+  label-key: "handa-x-jitaron-ads-cft"
 )
 //▲ここまで参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
