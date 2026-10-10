@@ -18,6 +18,9 @@ const CONFIG = {
 function generateAllTypstData() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
+  // 0. 実行開始時に既存の出力（各シートのoutput列および実行シートの名前付き範囲）をいったん全消しする
+  clearAllOutputs(ss);
+  
   // 1. まず用語集と参考文献の個別コードを更新
   var refCount = processReferencesSheet(ss);
   var termCount = processTermsSheet(ss);
@@ -32,6 +35,64 @@ function generateAllTypstData() {
     "・出力先: 「" + CONFIG.EXEC_SHEET_NAME + "」シート\n" +
     " - 命名定義「" + CONFIG.FULL_CODE_OUTPUT_RANGE + "」に全体コードを出力しました"
   );
+}
+
+/**
+ * 実行開始時に既存の出力内容をすべてクリアする関数
+ */
+function clearAllOutputs(ss) {
+  // 1. 参考文献シートのoutput列をクリア
+  var refSheet = ss.getSheetByName(CONFIG.REF_SHEET_NAME);
+  if (refSheet) {
+    var values = refSheet.getDataRange().getValues();
+    if (values.length > 1) {
+      var headers = values[0];
+      var outIdx = -1;
+      for (var i = 0; i < headers.length; i++) {
+        if (String(headers[i]).trim() === "output") {
+          outIdx = i;
+          break;
+        }
+      }
+      if (outIdx !== -1) {
+        refSheet.getRange(2, outIdx + 1, values.length - 1, 1).clearContent();
+      }
+    }
+  }
+
+  // 2. 用語集シートのoutput列をクリア
+  var termSheet = ss.getSheetByName(CONFIG.TERM_SHEET_NAME);
+  if (termSheet) {
+    var values = termSheet.getDataRange().getValues();
+    if (values.length > 1) {
+      var headers = values[0];
+      var outIdx = -1;
+      for (var i = 0; i < headers.length; i++) {
+        if (String(headers[i]).trim() === "output") {
+          outIdx = i;
+          break;
+        }
+      }
+      if (outIdx !== -1) {
+        termSheet.getRange(2, outIdx + 1, values.length - 1, 1).clearContent();
+      }
+    }
+  }
+
+  // 3. 「GAS実行」シートの名前付き範囲（アウトプットセル群）をクリア
+  clearNamedRangeValue(ss, CONFIG.TERM_OUTPUT_RANGE);
+  clearNamedRangeValue(ss, CONFIG.REF_OUTPUT_RANGE);
+  clearNamedRangeValue(ss, CONFIG.FULL_CODE_OUTPUT_RANGE);
+}
+
+/**
+ * 指定した名前付き範囲のセル内容をクリアするヘルパー関数
+ */
+function clearNamedRangeValue(ss, rangeName) {
+  var namedRange = ss.getRangeByName(rangeName);
+  if (namedRange) {
+    namedRange.clearContent();
+  }
 }
 
 /**
