@@ -96,13 +96,13 @@
 // --- 表紙ページ ---
 #align(center + horizon)[
   #v(-30mm)
-  #text(size: 14pt, tracking: 2pt)[半田広宣のイデア論]
+  #text(size: 11pt, fill: gray.darken(20%))[The Glossary of Noosology]
   
   #v(10mm)
   #text(size: 28pt, weight: "bold")[ヌーソロジー]
   
   #v(5mm)
-  #text(size: 11pt, fill: gray.darken(20%))[The Glossary of Noosology]
+  #text(size: 14pt, tracking: 2pt)[― 半田広宣のイデア論 ―]
 
   #v(20mm)
   // ヴェシカパイシス風の幾何学シンボル
@@ -273,11 +273,11 @@
 ) ]
 )
 
-// ぬうそろじい
+// ぬーそろじー
 === ヌーソロジー
 #term-item(
   term: "ヌーソロジー",
-  kana: "ぬうそろじい",
+  kana: "ぬーそろじー",
   desc: [ヌーソロジーとは物質と精神を空間的視点から統合する具体的なイデア論です [@handa-x] 。ヌースコンストラクションが「自己、他者、モノ」を意味しているように、ヌーソロジーは自他論とも言えます[@handa-x-jitaron-ads-cft]。
 ヌーソロジーは冥王星のオコツトと呼ばれる存在とのチャネリング体験、交信記録（通称：シリウスファイル）にルーツをもちますが、単なるチャネリング情報にとどまらず、現実の素粒子物理学、量子論、幾何学、哲学、生物学、心理学、果てはAIや機械学習まで、幅広い知識体系と現実的に整合性をとりつつ具体的な接合を実現しつつあり、武蔵野学院大学にヌーソロジー研究所が発足するなど新たな学問分野としての期待も高まっています。]
 )
@@ -485,8 +485,8 @@
 
 // --- 奥付ページ ---
 #align(center + horizon)[
-  #v(20mm)
-  #text(size: 14pt, weight: "bold")[ヌーソロジー]
+////  #v(20mm)
+  #text(size: 14pt, weight: "bold")[ヌーソロジー ― 半田広宣のイデア論 ―]
   
   #v(10mm)
   #text(size: 9.5pt)[

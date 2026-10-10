@@ -380,13 +380,13 @@ function buildFullTypstTemplate(glossaryContent, bibContent) {
 // --- 表紙ページ ---
 #align(center + horizon)[
   #v(-30mm)
-  #text(size: 14pt, tracking: 2pt)[半田広宣のイデア論]
+  #text(size: 11pt, fill: gray.darken(20%))[The Glossary of Noosology]
   
   #v(10mm)
   #text(size: 28pt, weight: "bold")[ヌーソロジー]
   
   #v(5mm)
-  #text(size: 11pt, fill: gray.darken(20%))[The Glossary of Noosology]
+  #text(size: 14pt, tracking: 2pt)[― 半田広宣のイデア論 ―]
 
   #v(20mm)
   // ヴェシカパイシス風の幾何学シンボル
@@ -446,8 +446,8 @@ ${bibContent}
 
 // --- 奥付ページ ---
 #align(center + horizon)[
-  #v(20mm)
-  #text(size: 14pt, weight: "bold")[ヌーソロジー]
+////  #v(20mm)
+  #text(size: 14pt, weight: "bold")[ヌーソロジー ― 半田広宣のイデア論 ―]
   
   #v(10mm)
   #text(size: 9.5pt)[
