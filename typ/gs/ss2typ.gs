@@ -331,7 +331,7 @@ function buildFullTypstTemplate(glossaryContent, bibContent) {
 // --- 【AIフレンドリー設計】用語定義用のカスタム関数 ---
 #let term-item(term: "", kana: "", desc: []) = {
   block(width: 100%, below: 1.2em, breakable: false, {
-    text(weight: "bold", size: 10.5pt, fill: blue.darken(35%))[・#term]
+    text(weight: "bold", size: 10.5pt, fill: blue.darken(35%))[#term]
     if kana != "" {
       text(size: 9pt, fill: gray.darken(30%))[ （#kana）]
     }
@@ -415,6 +415,8 @@ function buildFullTypstTemplate(glossaryContent, bibContent) {
 
 // --- 本文 ---
 = 用語集
+// ★ この1行を追加（これ以降の level 3 見出し「===」が本文上では消え、目次にだけ載る）
+#show heading.where(level: 3): none
 //▼ここから用語集■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ${glossaryContent}
 //▲ここまで用語集■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
