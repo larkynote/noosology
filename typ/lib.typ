@@ -1,6 +1,7 @@
 // --- 【AIフレンドリー設計】用語定義用のカスタム関数 ---
 #let term-item(term: "", kana: "", desc: []) = {
-  block(width: 100%, below: 1.2em, breakable: false, {
+////  block(width: 100%, below: 1.2em, breakable: false, {
+  block(width: 100%, below: 1.2em, breakable: true, {
     text(weight: "bold", size: 10.5pt, fill: blue.darken(35%))[#term]
     if kana != "" {
       text(size: 9pt, fill: gray.darken(30%))[ （#kana）]

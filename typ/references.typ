@@ -278,3 +278,11 @@
   url: "https://newton2013.web.fc2.com/math/matrix3.pdf",
   label-key: "satohakase-hp-pdf-su2-so3"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [アクアフラット],
+  date: "2021/02/24",
+  url: "https://x.com/kohsen/status/1364384871121051654?s=20",
+  label-key: "handa-x-fig-aquaflat"
+)

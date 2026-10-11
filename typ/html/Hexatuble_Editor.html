@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hexatuble Editor</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f8;--pn:#fff;--tx:#1d2330;--bd:#d5d9e2;--ac:#3b6fe0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--pn:#1e2330;--tx:#e6e9f2;--bd:#343b4d;--ac:#7aa2ff}}
+:root[data-theme="dark"]{--bg:#14171f;--pn:#1e2330;--tx:#e6e9f2;--bd:#343b4d;--ac:#7aa2ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif}
+#app{display:flex;gap:12px;padding:12px;align-items:flex-start;flex-wrap:wrap}
+#stage{flex:1 1 480px;min-width:0;overflow:auto;background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:8px}
+canvas{display:block;max-width:100%;height:auto;margin:auto;border-radius:6px;touch-action:none;cursor:grab;background-image:linear-gradient(45deg,#8883 25%,transparent 25%,transparent 75%,#8883 75%),linear-gradient(45deg,#8883 25%,transparent 25%,transparent 75%,#8883 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+#panel{flex:0 0 330px;max-width:100%;background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
+fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 10px;padding:6px 10px 8px}
+legend{font-weight:600;padding:0 4px;color:var(--ac)}
+label{display:flex;align-items:center;gap:6px;margin:3px 0}
+label span{flex:0 0 76px}
+input[type=range]{flex:1;min-width:0}
+input[type=number],input[type=text],select{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:5px;padding:3px 5px;min-width:0}
+input[type=number]{width:78px}input[type=text]{flex:1}select{flex:1}
+input[type=color]{width:44px;height:26px;padding:0;border:1px solid var(--bd);background:none}
+button{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:6px 12px;cursor:pointer;font:inherit}
+button.sub{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
+.val{flex:0 0 38px;text-align:right;font-variant-numeric:tabular-nums;opacity:.7}
+#vis{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+small{opacity:.65}
+</style></head><body>
+<div id="app">
+<div id="stage"><canvas id="cv" width="800" height="700"></canvas>
+<small>ドラッグ:全体回転 / Alt(Ctrl)+ドラッグ:画面内回転 / Shift+ドラッグ・右ドラッグ:移動 / ホイール:拡大縮小</small></div>
+<div id="panel">
+<fieldset><legend>表示のオン・オフ</legend><div id="vis"></div>
+<div class="row"><button class="sub" id="allOn">全て表示</button><button class="sub" id="allOff">全て非表示</button></div></fieldset>
+
+<fieldset><legend>図形ごとの設定</legend>
+<label><span>対象</span><select id="sel"></select></label>
+<label><span>回転 X</span><input type="range" id="rx" min="-180" max="180"><b class="val" id="vrx"></b></label>
+<label><span>回転 Y</span><input type="range" id="ry" min="-180" max="180"><b class="val" id="vry"></b></label>
+<label><span>回転 Z</span><input type="range" id="rz" min="-180" max="180"><b class="val" id="vrz"></b></label>
+<label><span>自動回転Y</span><input type="range" id="sp" min="-90" max="90"><b class="val" id="vsp"></b></label>
+<label><span>色(奥)</span><input type="color" id="c1"><span style="flex:0 0 50px;margin-left:8px">色(手前)</span><input type="color" id="c2"></label>
+<label><span>枠線の太さ</span><input type="range" id="lw" min="0" max="8" step="0.5"><b class="val" id="vlw"></b></label>
+<label><span>不透明度</span><input type="range" id="op" min="0.05" max="1" step="0.05"><b class="val" id="vop"></b></label>
+<small>枠線の太さを0にすると、その図形の枠線(球面は経線・緯線とふち)を非表示にできます。<br>不透明度:線の濃さ/球面の塗りの濃さ。球面の塗りは「色(手前)→色(奥)」の放射グラデーション。</small>
+</fieldset>
+
+<fieldset><legend>全体・キャンバス</legend>
+<label><span>幅(px)</span><input type="number" id="cw" min="200" max="3000" value="800"><span style="flex:0 0 40px;margin-left:6px">高さ</span><input type="number" id="ch" min="200" max="3000" value="700"></label>
+<label><span>背景色</span><input type="color" id="bg" value="#10162a"><label style="margin:0 0 0 8px"><input type="checkbox" id="tr">透明</label></label>
+<label><span>位置 X</span><input type="range" id="ox" min="-100" max="100" value="0"><b class="val" id="vox"></b></label>
+<label><span>位置 Y</span><input type="range" id="oy" min="-100" max="100" value="0"><b class="val" id="voy"></b></label>
+<label><span>全体回転 X</span><input type="range" id="gx" min="-180" max="180"><b class="val" id="vgx"></b></label>
+<label><span>全体回転 Y</span><input type="range" id="gy" min="-180" max="180"><b class="val" id="vgy"></b></label>
+<label><span>画面回転 Z</span><input type="range" id="gz" min="-180" max="180"><b class="val" id="vgz"></b></label>
+<label><span>拡大率</span><input type="range" id="zm" min="0.3" max="3" step="0.05" value="1"><b class="val" id="vzm"></b></label>
+<label><span>枠線を一括</span><input type="color" id="lcAll" value="#ffffff"><button class="sub" id="lcApply" style="margin-left:6px">全図形に適用</button></label>
+<div class="row"><button class="sub" id="lcClear">個別の色に戻す</button></div>
+<small>一括適用は辺・球の枠線の色のみ変更し、球の塗りのグラデーションはそのままです。</small>
+<label><input type="checkbox" id="auto" checked>自動回転を有効にする</label>
+<div class="row"><button class="sub" id="rv">視点・位置をリセット</button><button class="sub" id="rs">全設定リセット</button></div>
+</fieldset>
+
+<fieldset><legend>PNG保存</legend>
+<label><span>図の名前</span><input type="text" id="fn" value="Hexatuble"></label>
+<div class="row"><button id="save">PNGで保存</button></div></fieldset>
+</div></div>
+<script>
+const S3=Math.sqrt(3),D=Math.PI/180,cv=document.getElementById('cv'),cx=cv.getContext('2d');
+const $=id=>document.getElementById(id);
+// 外側→内側の順。正六面体の半辺長 a、外接球の半径 = a√3、その球に外接する立方体の半辺長 = a√3
+const defs=[
+['球面3','s',3*S3,'#5b3fb0','#c9a6ff'],['立方体3','c',3,'#d0475a','#ffb0a0'],['八面体3','o',3,'#d08a2e','#ffe08a'],
+['球面2','s',3,'#1f7a8c','#8de1f0'],['立方体2','c',S3,'#2f9e5b','#b4f0c0'],['八面体2','o',S3,'#a6a62a','#f5f58a'],
+['球面1','s',S3,'#3b6fe0','#a8c4ff'],['立方体1','c',1,'#e04b9b','#ffc0e0'],['八面体1','o',1,'#e0e0e0','#ffffff']];
+function segs(t,r){const out=[];
+ if(t=='c'){const v=[];for(let i=0;i<8;i++)v.push([i&1?r:-r,i&2?r:-r,i&4?r:-r]);
+  for(let i=0;i<8;i++)for(let b=1;b<8;b<<=1)if(!(i&b))out.push([v[i],v[i|b]]);}
+ else if(t=='o'){const v=[[r,0,0],[-r,0,0],[0,r,0],[0,-r,0],[0,0,r],[0,0,-r]];
+  for(let i=0;i<6;i++)for(let j=i+1;j<6;j++)if(j!=(i^1))out.push([v[i],v[j]]);}
+ else{const N=72,rings=[];
+  for(let k=0;k<6;k++){const a=k*Math.PI/6,c=Math.cos(a),s=Math.sin(a),p=[];
+   for(let i=0;i<=N;i++){const u=i/N*2*Math.PI;const x=r*Math.cos(u),y=r*Math.sin(u);p.push([x*c,y,x*s]);}rings.push(p);}
+  for(let l=-2;l<=2;l++){const h=l*Math.PI/6,rr=r*Math.cos(h),y=r*Math.sin(h),p=[];
+   for(let i=0;i<=N;i++){const u=i/N*2*Math.PI;p.push([rr*Math.cos(u),y,rr*Math.sin(u)]);}rings.push(p);}
+  rings.forEach(p=>{for(let i=0;i<N;i++)out.push([p[i],p[i+1]]);});}
+ return out;}
+let shapes=[],view,cur=0;
+function init(){
+ shapes=defs.map(d=>({n:d[0],t:d[1],r:d[2],c1:d[3],c2:d[4],vis:true,rot:[0,0,0],sp:0,lw:d[1]=='s'?1:2.5,op:d[1]=='s'?0.25:1,seg:segs(d[1],d[2])}));
+ shapes.forEach((s,i)=>{if(s.t=='c')s.rot=[0,0,0];});
+ view={gx:-25,gy:30,gz:0,ox:0,oy:0,zm:1};syncView();load();buildVis();}
+function syncView(){['x','y','z'].forEach(a=>{const v=((view['g'+a]+180)%360+360)%360-180;$('g'+a).value=v;$('vg'+a).textContent=Math.round(v)+'°'});$('ox').value=view.ox;$('oy').value=view.oy;$('zm').value=view.zm;$('vox').textContent=view.ox|0;$('voy').textContent=view.oy|0;$('vzm').textContent=(+view.zm).toFixed(2);}
+function buildVis(){$('vis').innerHTML='';shapes.forEach((s,i)=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.checked=s.vis;c.onchange=()=>{s.vis=c.checked};l.append(c,s.n);$('vis').append(l);s.cb=c;});
+ $('sel').innerHTML=shapes.map((s,i)=>`<option value="${i}">${s.n}</option>`).join('');$('sel').value=cur;}
+function load(){const s=shapes[cur];['x','y','z'].forEach((a,i)=>{$('r'+a).value=s.rot[i];$('vr'+a).textContent=Math.round(s.rot[i])+'°'});
+ $('sp').value=s.sp;$('vsp').textContent=s.sp;$('c1').value=s.c1;$('c2').value=s.c2;$('lw').value=s.lw;$('vlw').textContent=s.lw;$('op').value=s.op;$('vop').textContent=s.op;}
+$('sel').onchange=e=>{cur=+e.target.value;load()};
+['x','y','z'].forEach((a,i)=>$('r'+a).oninput=e=>{shapes[cur].rot[i]=+e.target.value;$('vr'+a).textContent=e.target.value+'°'});
+$('sp').oninput=e=>{shapes[cur].sp=+e.target.value;$('vsp').textContent=e.target.value};
+$('c1').oninput=e=>shapes[cur].c1=e.target.value;$('c2').oninput=e=>shapes[cur].c2=e.target.value;
+$('lw').oninput=e=>{shapes[cur].lw=+e.target.value;$('vlw').textContent=e.target.value};
+$('op').oninput=e=>{shapes[cur].op=+e.target.value;$('vop').textContent=e.target.value};
+['x','y','z'].forEach(a=>$('g'+a).oninput=e=>{view['g'+a]=+e.target.value;syncView()});
+$('ox').oninput=e=>{view.ox=+e.target.value;syncView()};$('oy').oninput=e=>{view.oy=+e.target.value;syncView()};$('zm').oninput=e=>{view.zm=+e.target.value;syncView()};
+function setSize(){const w=Math.max(200,Math.min(3000,+$('cw').value||800)),h=Math.max(200,Math.min(3000,+$('ch').value||700));cv.width=w;cv.height=h;}
+$('cw').onchange=$('ch').onchange=setSize;
+$('allOn').onclick=()=>shapes.forEach(s=>{s.vis=true;s.cb.checked=true});$('allOff').onclick=()=>shapes.forEach(s=>{s.vis=false;s.cb.checked=false});
+$('lcApply').onclick=()=>shapes.forEach(s=>s.lc=$('lcAll').value);$('lcClear').onclick=()=>shapes.forEach(s=>s.lc=null);
+$('rv').onclick=()=>{view={gx:-25,gy:30,gz:0,ox:0,oy:0,zm:1};syncView()};
+$('rs').onclick=()=>{init()};
+$('save').onclick=()=>{draw();const name=($('fn').value.trim()||'figure').replace(/[\\/:*?"<>|]/g,'_');
+ cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);},'image/png');};
+// 操作
+let drag=null;cv.oncontextmenu=e=>e.preventDefault();
+cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button==2,roll:e.altKey||e.ctrlKey};cv.style.cursor='grabbing'};
+cv.onpointermove=e=>{if(!drag)return;const k=cv.width/cv.getBoundingClientRect().width,dx=(e.clientX-drag.x)*k,dy=(e.clientY-drag.y)*k;drag.x=e.clientX;drag.y=e.clientY;
+ if(drag.pan){view.ox+=dx/cv.width*100*2;view.oy+=dy/cv.height*100*2;view.ox=Math.max(-100,Math.min(100,view.ox));view.oy=Math.max(-100,Math.min(100,view.oy));}
+ else if(drag.roll)view.gz+=dx*.4;else{view.gy+=dx*.4;view.gx+=dy*.4;}syncView();};
+cv.onpointerup=cv.onpointercancel=()=>{drag=null;cv.style.cursor='grab'};
+cv.onwheel=e=>{e.preventDefault();view.zm=Math.max(.3,Math.min(3,view.zm*(e.deltaY<0?1.08:.92)));syncView();};
+// 描画
+function rot(p,a){let [x,y,z]=p,c=Math.cos(a[0]*D),s=Math.sin(a[0]*D);[y,z]=[y*c-z*s,y*s+z*c];
+ c=Math.cos(a[1]*D);s=Math.sin(a[1]*D);[x,z]=[x*c+z*s,-x*s+z*c];
+ c=Math.cos(a[2]*D);s=Math.sin(a[2]*D);[x,y]=[x*c-y*s,x*s+y*c];return [x,y,z];}
+function hex(h){return [1,3,5].map(i=>parseInt(h.substr(i,2),16))}
+function draw(){const W=cv.width,H=cv.height;
+ if($('tr').checked)cx.clearRect(0,0,W,H);else{cx.fillStyle=$('bg').value;cx.fillRect(0,0,W,H);}
+ const sc=Math.min(W,H)*0.46/(3*S3)*view.zm,X0=W/2+view.ox/100*W/2,Y0=H/2+view.oy/100*H/2;
+ const g=[view.gx,view.gy,view.gz];cx.lineCap='round';
+ for(const s of shapes){if(!s.vis)continue;
+  const a=hex(s.c1),b=hex(s.c2),B=s.t=='s'?s.r:s.r*S3;
+  if(s.t=='s'){const R=s.r*sc,gr=cx.createRadialGradient(X0-R*.35,Y0-R*.35,R*.05,X0,Y0,R);
+   gr.addColorStop(0,`rgba(${b},${s.op})`);gr.addColorStop(1,`rgba(${a},${s.op*0.5})`);
+   cx.fillStyle=gr;cx.beginPath();cx.arc(X0,Y0,R,0,7);cx.fill();
+   if(s.lw>0){cx.strokeStyle=`rgba(${s.lc?hex(s.lc):b},${Math.min(1,s.op+.4)})`;cx.lineWidth=s.lw;cx.stroke();}}
+  const L=[];
+  if(s.lw>0)for(const [p,q] of s.seg){const P=rot(rot(p,s.rot),g),Q=rot(rot(q,s.rot),g);L.push([P,Q,(P[2]+Q[2])/2]);}
+  L.sort((u,v)=>u[2]-v[2]);
+  const lo=s.t=='s'?0.12:0.25;
+  for(const [P,Q,z] of L){const t=Math.max(0,Math.min(1,(z/B+1)/2));
+   const col=s.lc?hex(s.lc):a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+   cx.strokeStyle=`rgba(${col},${Math.min(1,(lo+(1-lo)*t)*(s.t=='s'?s.op*2.5+.2:s.op))})`;
+   cx.lineWidth=s.lw*(s.t=='s'?.6:1)*(0.7+0.5*t);
+   cx.beginPath();cx.moveTo(X0+P[0]*sc,Y0-P[1]*sc);cx.lineTo(X0+Q[0]*sc,Y0-Q[1]*sc);cx.stroke();}
+ }}
+let last=performance.now();
+function loop(t){const dt=Math.min(.1,(t-last)/1000);last=t;
+ if($('auto').checked)shapes.forEach((s,i)=>{if(s.sp){s.rot[1]=((s.rot[1]+s.sp*dt+180)%360+360)%360-180;if(i==cur){$('ry').value=s.rot[1];$('vry').textContent=Math.round(s.rot[1])+'°';}}});
+ draw();requestAnimationFrame(loop);}
+init();requestAnimationFrame(loop);
+</script></body></html>
