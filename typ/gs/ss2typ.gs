@@ -1,4 +1,5 @@
-//GAS（Google Apps Script）のソースコードです。
+// ヌーソロジー書籍化プロジェクト
+// GAS（Google Apps Script）のソースコードです。
 
 // --- 【設定】シート名や名前定義（Named Ranges）の定数定義 ---
 const CONFIG = {
@@ -7,13 +8,12 @@ const CONFIG = {
   EXEC_SHEET_NAME: "GAS実行",
   // 名前付き範囲の名称
   TERM_OUTPUT_RANGE: "用語集アウトプット",
-  REF_OUTPUT_RANGE: "参考文献アウトプット",
-  FULL_CODE_OUTPUT_RANGE: "コード全体アウトプット"
+  REF_OUTPUT_RANGE: "参考文献アウトプット"
 };
 
 /**
  * 【メイン関数】各シートの変換を行い、最新データに更新した上で、
- * テンプレートと結合して「コード全体アウトプット」に一括出力する
+ * 「GAS実行」シートの各アウトプットセルに出力する
  */
 function generateAllTypstData() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -25,15 +25,14 @@ function generateAllTypstData() {
   var refCount = processReferencesSheet(ss);
   var termCount = processTermsSheet(ss);
   
-  // 2. 「GAS実行」シートの各アウトプットセル、および全体コード出力を実行
+  // 2. 「GAS実行」シートの各アウトプットセルに出力を反映
   outputToExecSheet(ss);
   
   SpreadsheetApp.getUi().alert(
     "すべての変換と「GAS実行」シートへの一括出力が完了しました！\n\n" +
     "・参考文献: " + refCount + "件 更新\n" +
     "・用語集: " + termCount + "件 更新\n" +
-    "・出力先: 「" + CONFIG.EXEC_SHEET_NAME + "」シート\n" +
-    " - 命名定義「" + CONFIG.FULL_CODE_OUTPUT_RANGE + "」に全体コードを出力しました"
+    "・出力先: 「" + CONFIG.EXEC_SHEET_NAME + "」シート"
   );
 }
 
@@ -82,7 +81,6 @@ function clearAllOutputs(ss) {
   // 3. 「GAS実行」シートの名前付き範囲（アウトプットセル群）をクリア
   clearNamedRangeValue(ss, CONFIG.TERM_OUTPUT_RANGE);
   clearNamedRangeValue(ss, CONFIG.REF_OUTPUT_RANGE);
-  clearNamedRangeValue(ss, CONFIG.FULL_CODE_OUTPUT_RANGE);
 }
 
 /**
@@ -221,7 +219,7 @@ function processTermsSheet(ss) {
 }
 
 /**
- * 名前定義を使って各パーツを収集し、テンプレートと結合して「コード全体アウトプット」に出力する関数
+ * 各パーツを収集し、「GAS実行」シートの名前付き範囲に出力する関数
  */
 function outputToExecSheet(ss) {
   // 1. 用語集から出力コードを収集
@@ -260,10 +258,6 @@ function outputToExecSheet(ss) {
   // 3. 名前定義（Named Ranges）を経由して、それぞれのセルにパーツを出力
   setNamedRangeValue(ss, CONFIG.TERM_OUTPUT_RANGE, combinedTerms);
   setNamedRangeValue(ss, CONFIG.REF_OUTPUT_RANGE, combinedRefs);
-  
-  // 4. Typst全体のテンプレートコードを組み立て、全体出力用の名前定義セルへ流し込む
-  var fullTypstCode = buildFullTypstTemplate(combinedTerms, combinedRefs);
-  setNamedRangeValue(ss, CONFIG.FULL_CODE_OUTPUT_RANGE, fullTypstCode);
 }
 
 /**
@@ -279,185 +273,97 @@ function setNamedRangeValue(ss, rangeName, value) {
 }
 
 /**
- * Typst全体のテンプレートを組み立てる関数
+ * 指定した名前付き範囲（Named Range）から値を取得するヘルパー関数
  */
-function buildFullTypstTemplate(glossaryContent, bibContent) {
-  return `#set page(
-  paper: "a5",
-  margin: (top: 22mm, bottom: 22mm, left: 22mm, right: 22mm),
-  
-  // ページ全体の枠線
-  background: context {
-    let m = 12mm
-    place(
-      top + left,
-      dx: m,
-      dy: m,
-      rect(
-        width: 100% - (m * 2),
-        height: 100% - (m * 2),
-        stroke: 0.5pt + gray.darken(30%),
-        radius: 2pt
-      )
-    )
-  },
-
-  header: context {
-    let page_num = counter(page).get().first()
-    if page_num > 2 {
-      align(center, text(size: 8pt, fill: gray)[ヌーソロジー ― 半田広宣のイデア論 ―])
-    }
-  },
-  footer: context {
-    let page_num = counter(page).get().first()
-    if page_num > 1 {
-      align(center, text(size: 9pt)[#page_num])
-    }
+function getNamedRangeValue(ss, rangeName) {
+  var namedRange = ss.getRangeByName(rangeName);
+  if (namedRange) {
+    var val = namedRange.getValue();
+    return val ? String(val) : "";
   }
-)
-
-#set text(
-  font: ("Yu Mincho", "BIZ UDPMincho", "MS Mincho"),
-  size: 9.5pt,
-  lang: "ja"
-)
-
-#set par(
-  justify: true,
-  leading: 0.65em,
-  first-line-indent: 1em
-)
-
-// --- 【AIフレンドリー設計】用語定義用のカスタム関数 ---
-#let term-item(term: "", kana: "", desc: []) = {
-  block(width: 100%, below: 1.2em, breakable: false, {
-    text(weight: "bold", size: 10.5pt, fill: blue.darken(35%))[#term]
-    if kana != "" {
-      text(size: 9pt, fill: gray.darken(30%))[ （#kana）]
-    }
-    v(0.2em)
-    pad(left: 1.2em)[#desc]
-  })
+  console.warn("名前付き範囲「" + rangeName + "」が見つかりませんでした。");
+  return "";
 }
 
-// --- 【AIフレンドリー設計】更新履歴用のカスタム関数 ---
-#let changelog(version: "", date: "", items: ()) = {
-  block(width: 100%, below: 1em, {
-    // バージョンと日付のヘッダー行
-    text(weight: "bold", size: 9.5pt, font: ("Courier New", "MS Gothic"))[v#version]
-    text(size: 8.5pt, fill: gray.darken(35%))[ （#date）]
-    v(0.1em)
-    // 複数の変更項目をリスト形式で展開
-    pad(left: 1.2em, {
-      for item in items {
-        list(item)
-      }
-    })
-  })
-}
-
-// --- 【AIフレンドリー設計】参考文献用の構造化関数（修正版） ---
-#let bib-item(author: "", title: "", date: "", note: "", url: "", label-key: none) = {
-  let fig = figure(
-    kind: "bib",
-    supplement: [文献],
-    [
-      #if author != "" [ #strong(author), ]
-      #title
-      #if date != "" [ #text(size: 9pt, fill: gray.darken(30%))[（#date）] ]
-      #if note != "" [ \ #text(size: 9pt, fill: gray.darken(30%))[#note] ]
-      #if url != "" [ \ #link(url)[#text(size: 8.5pt, fill: blue.darken(20%))[#url]] ]
-    ]
-  )
+/**
+ * 「GAS実行」シートの用語集内容を取得し、インポート文を追加して「glossary.typ」としてダウンロードする
+ */
+function downloadGlossaryFile() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var rawContent = getNamedRangeValue(ss, CONFIG.TERM_OUTPUT_RANGE);
   
-  if label-key != none {
-    [#fig#label(label-key)]
-  } else {
-    fig
+  if (!rawContent) {
+    SpreadsheetApp.getUi().alert(
+      "「" + CONFIG.EXEC_SHEET_NAME + "」シートの名前付き範囲「" + CONFIG.TERM_OUTPUT_RANGE + "」が空です。\n" +
+      "先にメインの変換処理を実行してデータを生成してください。"
+    );
+    return;
   }
+  
+  // 先頭に lib.typ のインポート文を自動追加する
+  var content = '#import "lib.typ": term-item\n\n' + rawContent;
+  
+  showDownloadDialog("glossary.typ", content, "用語集ファイル（glossary.typ）のダウンロード");
 }
 
-// --- 表紙ページ ---
-#align(center + horizon)[
-  #v(-30mm)
-  #text(size: 11pt, fill: gray.darken(20%))[The Glossary of Noosology]
+/**
+ * 「GAS実行」シートの参考文献内容を取得し、インポート文を追加して「references.typ」としてダウンロードする
+ */
+function downloadReferencesFile() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var rawContent = getNamedRangeValue(ss, CONFIG.REF_OUTPUT_RANGE);
   
-  #v(10mm)
-  #text(size: 28pt, weight: "bold")[ヌーソロジー]
+  if (!rawContent) {
+    SpreadsheetApp.getUi().alert(
+      "「" + CONFIG.EXEC_SHEET_NAME + "」シートの名前付き範囲「" + CONFIG.REF_OUTPUT_RANGE + "」が空です。\n" +
+      "先にメインの変換処理を実行してデータを生成してください。"
+    );
+    return;
+  }
   
-  #v(5mm)
-  #text(size: 14pt, tracking: 2pt)[― 半田広宣のイデア論 ―]
-
-  #v(20mm)
-  // ヴェシカパイシス風の幾何学シンボル
-  #box(width: 40mm, height: 25mm, {
-    place(top + left, dx: 5mm, circle(radius: 10mm, stroke: 0.5pt + black))
-    place(top + left, dx: 15mm, circle(radius: 10mm, stroke: 0.5pt + black))
-  })
-
-  #v(20mm)
-  #text(size: 12pt)[著者：ラーキー]
+  // 先頭に lib.typ のインポート文を自動追加する
+  var content = '#import "lib.typ": bib-item\n\n' + rawContent;
   
-  #v(5mm)
-  #text(size: 9pt, fill: gray)[発行：Larky Note]
-]
-
-#pagebreak()
-
-// --- 目次ページ ---
-#outline(
-  title: [目次],
-  indent: 1.5em,
-  depth: 3  // ← ここを 3 に変更（見出し3まで目次に拾わせる）
-)
-
-#pagebreak()
-
-// --- 本文 ---
-= 用語集
-// ★ この1行を追加（これ以降の level 3 見出し「===」が本文上では消え、目次にだけ載る）
-#show heading.where(level: 3): none
-//▼ここから用語集■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-${glossaryContent}
-//▲ここまで用語集■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-
-#pagebreak()
-
-// --- 参考文献 ---
-= 参考文献
-
-#show figure: set align(left)
-#set par(first-line-indent: 0pt)
-
-#show figure.where(kind: "bib"): it => {
-  let num = numbering("1", counter(figure.where(kind: "bib")).at(it.location()).first())
-  
-  block(width: 100%, below: 1.2em, [
-    #strong("[" + num + "]") \\
-    #pad(left: 1.5em, it.body)
-  ])
+  showDownloadDialog("references.typ", content, "参考文献ファイル（references.typ）のダウンロード");
 }
 
-//▼ここから参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-${bibContent}
-//▲ここまで参考文献■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-
-#pagebreak()
-
-// --- 奥付ページ ---
-#align(center + horizon)[
-////  #v(20mm)
-  #text(size: 14pt, weight: "bold")[ヌーソロジー ― 半田広宣のイデア論 ―]
+/**
+ * 共通のダウンロード用モーダルダイアログを表示するヘルパー関数
+ */
+function showDownloadDialog(filename, fileContent, title) {
+  var template = HtmlService.createTemplate(
+    '<!DOCTYPE html>' +
+    '<html>' +
+    '<head><meta charset="utf-8"></head>' +
+    '<body style="font-family:sans-serif; text-align:center; padding:20px;">' +
+    '  <p><b><?= filename ?></b> の準備ができました。</p>' +
+    '  <button id="dl-btn" style="background:#4285f4; color:white; border:none; padding:10px 20px; font-size:14px; border-radius:4px; cursor:pointer;">ファイルをダウンロード</button>' +
+    '  <p style="font-size:12px; color:#666; margin-top:15px;">ボタンを押すとダウンロードが始まります。<br>完了したらこのウインドウを閉じてください。</p>' +
+    '  <script>' +
+    '    document.getElementById("dl-btn").onclick = function() {' +
+    // JSON.parse を噛ませることで、改行や特殊文字を元のテキストの構造通りに完璧に復元します
+    '      var rawContent = JSON.parse(<?= safeContent ?>);' +
+    '      var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });' +
+    '      var url = URL.createObjectURL(blob);' +
+    '      var a = document.createElement("a");' +
+    '      a.href = url;' +
+    '      a.download = "<?= filename ?>";' +
+    '      document.body.appendChild(a);' +
+    '      a.click();' +
+    '      document.body.removeChild(a);' +
+    '      URL.revokeObjectURL(url);' +
+    '    };' +
+    '  </script>' +
+    '</body>' +
+    '</html>'
+  );
   
-  #v(10mm)
-  #text(size: 9.5pt)[
-    発行日：2026年11月1日 初版発行\\
-    著者：ラーキー\\
-    発行：Larky Note\\
-    \\
-    #v(5mm)
-    本書の無断転載・複製・公衆送信は常識の範囲でご自由にどうぞ。\\
-    Printed in Japan.
-  ]
-]`;
+  template.filename = filename;
+  template.safeContent = JSON.stringify(fileContent);
+  
+  var htmlOutput = template.evaluate()
+      .setWidth(350)
+      .setHeight(200);
+      
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, title);
 }
