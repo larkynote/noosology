@@ -206,3 +206,43 @@
   url: "https://youtube.com/playlist?list=PLlvf0DINLrPla5L3SNnd9zXwwSyCvuivJ&si=GDS0ZAnF-HWasQp_",
   label-key: "na-yt-hexa"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [観察する行為が意識の反転],
+  date: "2025/04/29",
+  url: "https://x.com/kohsen/status/1917157625260900551?s=20",
+  label-key: "handa-x-hanten-kansatsu"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [向かい合う自他の視野空間と交合円錐],
+  date: "2023/05/20",
+  url: "https://x.com/kohsen/status/1659714830897491971?s=20",
+  label-key: "handa-x-fig-kougou-ensui-hanten"
+)
+
+#bib-item(
+  author: "Rolf Nemitz",
+  title: [Das Schema von Auge und Blick],
+  date: "2014/08/03",
+  url: "https://lacan-entziffern.de/trieb/obertitel-lacans-schemata/",
+  label-key: "lacan-ronbun-kougou-ensui"
+)
+
+#bib-item(
+  author: "美輪明宏",
+  title: [ロマンをコレクション（美輪明宏オフィシャルブログ）],
+  date: "2013/12/30",
+  url: "https://ameblo.jp/miwaakihiro-reijin/entry-11736155202.html",
+  label-key: "miwa-blog-mark"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [向かい合う自他の視野空間と交合円錐],
+  date: "2026/03/31",
+  url: "https://x.com/kohsen/status/2038775047981351071?s=20",
+  label-key: "handa-x-fig-kougou-ensui-red"
+)

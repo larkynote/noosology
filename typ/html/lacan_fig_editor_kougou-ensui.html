@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>図9 視野空間と交合円錐 エディタ</title>
+<style>
+:root{--bg:#e9e7e2;--panel:#fbfaf8;--ink:#1d1d1b;--mute:#6b6963;--line:#cfccc4;--accent:#1f5fbf;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171716;--panel:#22221f;--ink:#ecebe6;--mute:#9a978f;--line:#3a3935;--accent:#7aa8ff}}
+:root[data-theme="dark"]{--bg:#171716;--panel:#22221f;--ink:#ecebe6;--mute:#9a978f;--line:#3a3935;--accent:#7aa8ff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "Hiragino Sans","Yu Gothic","Noto Sans JP",system-ui,sans-serif}
+.app{display:flex;gap:16px;padding:16px;min-height:100vh;align-items:flex-start}
+aside{width:290px;flex:none;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+h2{font-size:13px;margin:16px 0 6px;color:var(--mute);font-weight:600}
+h2:first-child{margin-top:0}
+.row{display:flex;align-items:center;gap:6px;margin:3px 0}
+.row input[type=text]{flex:1;min-width:0;font:inherit;padding:2px 6px;border:1px solid var(--line);border-radius:5px;background:transparent;color:var(--ink)}
+.row input[type=number]{width:72px;font:inherit;padding:2px 6px;border:1px solid var(--line);border-radius:5px;background:transparent;color:var(--ink)}
+button{font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);cursor:pointer}
+button.main{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.stage{flex:1;min-width:0;overflow-x:auto}
+.paper{background:#fff;border:1px solid var(--line);border-radius:4px;line-height:0;display:inline-block;max-width:100%}
+svg{max-width:100%;height:auto;touch-action:none}
+svg .lbl{cursor:move}
+svg .lbl:hover{fill:var(--accent)}
+svg{cursor:grab}
+svg:active{cursor:grabbing}
+.hint{color:var(--mute);font-size:12px;margin:8px 0 0}
+@media (max-width:760px){.app{flex-direction:column}aside{width:100%;position:static;max-height:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <h2>表示の切り替え</h2><div id="shapes"></div>
+  <h2>ラベル（表示・文字。改行は「|」）</h2><div id="labels"></div>
+  <h2>キャンバス</h2>
+  <div class="row"><input type="number" id="w" min="400" max="6000" step="20"> × <input type="number" id="h" min="300" max="6000" step="20"> px</div>
+  <div class="row">線の太さ <input type="number" id="sw" min="1" max="30" step="1"></div>
+  <div class="row">文字サイズ倍率 <input type="number" id="fs" min="0.3" max="3" step="0.1"></div>
+  <div class="row">書き出し倍率
+    <select id="scale"><option>1</option><option>2</option><option>3</option></select>
+    <label><input type="checkbox" id="bg" checked> 白背景</label></div>
+  <div class="btns"><button class="main" id="save">PNGで保存</button><button id="reset">位置・文字を初期化</button></div>
+  <p class="hint">ラベルは1つずつドラッグで移動できます。ラベル以外の場所（図形や余白）をドラッグすると、図全体（ラベル含む）が動きます。キャンバスを広げても図の座標は変わらず余白が増えます。</p>
+</aside>
+<div class="stage"><div class="paper"><svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg></div></div>
+</div>
+<script>
+/* ===== 初期設定（ここを書き換えても調整できます） ===== */
+const CFG = {
+  W: 2040, H: 1200,          // キャンバスサイズ(px)
+  STROKE: 6,                 // 線の太さ
+  FONT_SCALE: 1,             // 文字サイズ倍率
+  EXPORT_SCALE: 1,           // PNG書き出し倍率
+  FONT: '"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif'
+};
+// ラベル: id, text(「|」で改行), x, y(1行目のベースライン), size, bold, lh(行送り)
+const LABELS0 = [
+  {id:'title', text:'図 9　向かい合う自他の視野空間と交合円錐', x:230, y:160, size:56, bold:1},
+  {id:'scr1', text:'スクリーン', x:300, y:368, size:62, bold:1},
+  {id:'scr2', text:'スクリーン *', x:1440, y:378, size:62, bold:1},
+  {id:'obj', text:'物', x:1010, y:522, size:58, bold:1},
+  {id:'pupilO', text:'他者の|瞳孔', x:590, y:588, size:36, lh:50},
+  {id:'pupilS', text:'自己の|瞳孔', x:1435, y:612, size:36, lh:50},
+  {id:'aStar', text:'a*', x:530, y:660, size:48},
+  {id:'a', text:'a', x:1523, y:678, size:48},
+  {id:'zero', text:'0', x:998, y:692, size:52, bold:1},
+  {id:'fieldS', text:'自己の|視野空間', x:272, y:688, size:36, lh:50},
+  {id:'S', text:'S', x:428, y:718, size:48},
+  {id:'Sstar', text:'S*', x:1618, y:716, size:48},
+  {id:'fieldO', text:'他者の|視野空間', x:1688, y:676, size:36, lh:50},
+  {id:'cam1', text:'カメラ *', x:418, y:795, size:62, bold:1},
+  {id:'cam2', text:'カメラ', x:1440, y:805, size:62, bold:1}
+];
+const NAMES = {title:'タイトル',scr1:'スクリーン（左）',scr2:'スクリーン *（右）',obj:'物',pupilO:'他者の瞳孔',pupilS:'自己の瞳孔',aStar:'a*',a:'a',zero:'0',fieldS:'自己の視野空間',S:'S',Sstar:'S*',fieldO:'他者の視野空間',cam1:'カメラ *（左）',cam2:'カメラ（右）'};
+/* ===== 図形 ===== */
+const SHAPES = [
+  {id:'screens', name:'スクリーン枠', d:'M516 405V1012|M1565 403V1010'},
+  {id:'cones', name:'円錐の線', d:'M516 405L1562 708|M1565 403L514 706|M516 1012L1562 708|M1565 1010L514 706'},
+  {id:'axis', name:'中心軸', d:'M514 708H1562|M1041 556V859'},
+  {id:'brackets', name:'括弧', d:'M470 405H440V680M440 740V1012H470|M1595 396H1625V665M1625 740V1003H1595'},
+  {id:'dots', name:'点', dots:[[514,706],[1041,709],[1562,708]]}
+];
+/* ===== 状態 ===== */
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('svg');
+const state={show:{},fig:{x:0,y:0},labels:JSON.parse(JSON.stringify(LABELS0)),sw:CFG.STROKE,fs:CFG.FONT_SCALE,W:CFG.W,H:CFG.H};
+[...SHAPES,...LABELS0].forEach(o=>state.show[o.id]=true);
+
+function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+
+function draw(){
+  svg.replaceChildren();
+  svg.setAttribute('viewBox',`0 0 ${state.W} ${state.H}`);
+  svg.setAttribute('width',state.W);svg.setAttribute('height',state.H);
+  el('rect',{id:'bgrect',width:state.W,height:state.H,fill:'#fff'},svg);
+  const fig=el('g',{id:'fig',transform:`translate(${state.fig.x} ${state.fig.y})`},svg);
+  const g=el('g',{fill:'none',stroke:'#000','stroke-width':state.sw,'stroke-linejoin':'miter'},fig);
+  SHAPES.forEach(s=>{
+    if(!state.show[s.id])return;
+    const parts=s.d?s.d.split('|').map(d=>({d})):s.dots.map(([x,y])=>({x,y}));
+    parts.forEach((p,i)=>{
+      const q=el('g',{class:'shp'},g);
+      if(p.d){el('path',{d:p.d},q);el('path',{d:p.d,stroke:'transparent','stroke-width':Math.max(30,state.sw*4)},q)}
+      else{el('circle',{cx:p.x,cy:p.y,r:11,fill:'#000',stroke:'none'},q);el('circle',{cx:p.x,cy:p.y,r:28,fill:'transparent',stroke:'none'},q)}
+    });
+  });
+  state.labels.forEach(l=>{
+    if(!state.show[l.id])return;
+    const t=el('text',{class:'lbl','data-id':l.id,x:l.x,y:l.y,'font-size':l.size*state.fs,'font-weight':l.bold?700:400,'font-family':CFG.FONT,fill:'#000'},fig);
+    l.text.split('|').forEach((ln,i)=>{
+      const s=el('tspan',{x:l.x,dy:i?(l.lh||l.size*1.4)*state.fs:0},t);s.textContent=ln;
+    });
+  });
+}
+
+/* ===== パネル ===== */
+function check(id,name){
+  const lab=document.createElement('label');lab.className='row';
+  const c=document.createElement('input');c.type='checkbox';c.checked=state.show[id];
+  c.onchange=()=>{state.show[id]=c.checked;draw()};
+  lab.append(c,name);return lab;
+}
+function buildPanel(){
+  const sp=document.getElementById('shapes');sp.replaceChildren();
+  SHAPES.forEach(s=>sp.appendChild(check(s.id,s.name)));
+  const lp=document.getElementById('labels');lp.replaceChildren();
+  state.labels.forEach(l=>{
+    const r=document.createElement('div');r.className='row';
+    const c=document.createElement('input');c.type='checkbox';c.checked=state.show[l.id];c.title=NAMES[l.id];
+    c.onchange=()=>{state.show[l.id]=c.checked;draw()};
+    const t=document.createElement('input');t.type='text';t.value=l.text;t.setAttribute('aria-label',NAMES[l.id]);
+    t.oninput=()=>{l.text=t.value;draw()};
+    r.append(c,t);lp.appendChild(r);
+  });
+  w.value=state.W;h.value=state.H;sw.value=state.sw;fs.value=state.fs;scale.value=CFG.EXPORT_SCALE;
+}
+const $=id=>document.getElementById(id);
+const w=$('w'),h=$('h'),sw=$('sw'),fs=$('fs'),scale=$('scale'),bg=$('bg');
+w.onchange=()=>{state.W=Math.max(400,+w.value||CFG.W);draw()};
+h.onchange=()=>{state.H=Math.max(300,+h.value||CFG.H);draw()};
+sw.onchange=()=>{state.sw=Math.max(1,+sw.value||6);draw()};
+fs.onchange=()=>{state.fs=Math.max(.3,+fs.value||1);draw()};
+$('reset').onclick=()=>{state.fig={x:0,y:0};state.labels=JSON.parse(JSON.stringify(LABELS0));buildPanel();draw()};
+
+/* ===== ドラッグ移動 ===== */
+let drag=null;
+function pt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+svg.addEventListener('pointerdown',e=>{
+  const t=e.target.closest('.lbl'),p=pt(e);
+  if(t){
+    const l=state.labels.find(x=>x.id===t.dataset.id);
+    drag={l,dx:p.x-state.fig.x-l.x,dy:p.y-state.fig.y-l.y};
+  }else{
+    drag={start:p,bx:state.fig.x,by:state.fig.y};
+  }
+  svg.setPointerCapture(e.pointerId);e.preventDefault();
+});
+svg.addEventListener('pointermove',e=>{
+  if(!drag)return;const p=pt(e);
+  if(drag.start){
+    state.fig={x:Math.round(drag.bx+p.x-drag.start.x),y:Math.round(drag.by+p.y-drag.start.y)};
+    $('fig').setAttribute('transform',`translate(${state.fig.x} ${state.fig.y})`);
+    return;
+  }
+  drag.l.x=Math.round(p.x-state.fig.x-drag.dx);drag.l.y=Math.round(p.y-state.fig.y-drag.dy);
+  const t=svg.querySelector(`[data-id="${drag.l.id}"]`);
+  t.setAttribute('x',drag.l.x);t.setAttribute('y',drag.l.y);
+  t.querySelectorAll('tspan').forEach(s=>s.setAttribute('x',drag.l.x));
+});
+svg.addEventListener('pointerup',()=>{drag=null});
+
+/* ===== PNG保存 ===== */
+$('save').onclick=()=>{
+  const k=+scale.value,c=svg.cloneNode(true);
+  c.setAttribute('width',state.W*k);c.setAttribute('height',state.H*k);
+  c.querySelector('#bgrect').setAttribute('fill',bg.checked?'#fff':'none');
+  const url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c));
+  const img=new Image();
+  img.onload=()=>{
+    const cv=document.createElement('canvas');cv.width=state.W*k;cv.height=state.H*k;
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fig-kougou-ensui.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)},'image/png');
+  };
+  img.src=url;
+};
+
+buildPanel();draw();
+</script>
+</body>
+</html>
