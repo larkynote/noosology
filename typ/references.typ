@@ -51,7 +51,7 @@
 
 #bib-item(
   author: "半田広宣",
-  title: [半田さんの誕生日に関する投稿],
+  title: [半田広宣氏の誕生日に関する投稿],
   date: "2022/11/04",
   url: "https://x.com/kohsen/status/1588529713349550086?s=20",
   label-key: "kohsen-birthday"
@@ -165,4 +165,44 @@
   title: [意識物理学研究所],
   url: "https://newton2013.web.fc2.com/",
   label-key: "satohakase-hp"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [男が言語的動物で、女が知覚的動物],
+  date: "2020/08/18",
+  url: "https://x.com/kohsen/status/1295536767232176128?s=20",
+  label-key: "handa-x-sei-field"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [調整質と男と女],
+  date: "2018/08/03",
+  url: "https://x.com/kohsen/status/1025256797479653376?s=20",
+  label-key: "handa-x-sei-cc"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [ヌーソロジーにおけるトリニティ],
+  date: "2024/11/22",
+  url: "https://x.com/kohsen/status/1859811673873555799?s=20",
+  label-key: "handa-x-trinity-acd"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [【ジピによるヘキサチューブル解説】
+],
+  date: "2024/06/14",
+  url: "https://x.com/kohsen/status/1801401468886651307?s=20",
+  label-key: "handa-x-fig-hexa-gpt"
+)
+
+#bib-item(
+  author: "ヌースアカデメイア",
+  title: [ヘキサチューブル談義],
+  url: "https://youtube.com/playlist?list=PLlvf0DINLrPla5L3SNnd9zXwwSyCvuivJ&si=GDS0ZAnF-HWasQp_",
+  label-key: "na-yt-hexa"
 )
