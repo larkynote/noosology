@@ -246,3 +246,35 @@
   url: "https://x.com/kohsen/status/2038775047981351071?s=20",
   label-key: "handa-x-fig-kougou-ensui-red"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [90度とは反転する力],
+  date: "2018/12/06",
+  url: "https://x.com/kohsen/status/1070334284706140160",
+  label-key: "handa-x-90-degrees"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [SU(2)とSO(3)],
+  date: "2023/02/14",
+  url: "https://x.com/kohsen/status/1625283726702972935?s=20",
+  label-key: "handa-x-fig-su2-so3"
+)
+
+#bib-item(
+  author: "eigenchris",
+  title: [初学者のためのスピノル 10: SU(2)はSO(3)の二重被覆 [ SL(2,C)はSO+(1,3)の二重被覆 ]
+],
+  date: "2023/08/06",
+  url: "https://www.youtube.com/watch?v=Ay482u6b3Xo",
+  label-key: "eigenchris-yt-su2-so3"
+)
+
+#bib-item(
+  author: "佐藤博紀",
+  title: [行列３～SO(3)とSU(2)～（ヌース理解のための基礎数学・物理学）],
+  url: "https://newton2013.web.fc2.com/math/matrix3.pdf",
+  label-key: "satohakase-hp-pdf-su2-so3"
+)
