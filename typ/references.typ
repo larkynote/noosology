@@ -286,3 +286,11 @@
   url: "https://x.com/kohsen/status/1364384871121051654?s=20",
   label-key: "handa-x-fig-aquaflat"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [見る空間と見られる空間の関係],
+  date: "2026/04/07",
+  url: "https://x.com/kohsen/status/2041354914757288031?s=20",
+  label-key: "handa-x-fig-ai-miru-mirareru"
+)
