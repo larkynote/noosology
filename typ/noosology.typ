@@ -24,7 +24,7 @@
   header: context {
     let page_num = counter(page).get().first()
     if page_num > 2 {
-      align(center, text(size: 8pt, fill: gray)[ヌーソロジー ― 半田広宣のイデア論 ―])
+      align(center, text(size: 8pt, fill: gray)[ヌーソロジー用語集2026 ― 半田広宣のイデア論 ―])
     }
   },
   footer: context {
@@ -49,13 +49,16 @@
 
 // --- 表紙ページ ---
 #align(center + horizon)[
-  #v(-30mm)
-  #text(size: 11pt, fill: gray.darken(20%))[ヌーソロジー非公式ファンブック]
+  #v(-14mm)
+  #text(size: 11pt, fill: gray.darken(20%))[非公式ファンブック]
   
   #v(10mm)
-  #text(size: 28pt, weight: "bold")[ヌーソロジー用語集]
+  #text(size: 28pt, weight: "bold")[ヌーソロジー]
   
-  #v(5mm)
+  #v(-3mm)
+  #text(size: 20pt, weight: "bold")[用語集2026]
+  
+  #v(3mm)
   #text(size: 14pt, tracking: 2pt)[― 半田広宣のイデア論 ―]
 
   #v(20mm)
@@ -113,7 +116,7 @@
 // --- 奥付ページ ---
 #align(center + horizon)[
 ////  #v(20mm)
-  #text(size: 14pt, weight: "bold")[ヌーソロジー ― 半田広宣のイデア論 ―]
+  #text(size: 14pt, weight: "bold")[ヌーソロジー用語集2026 \ ― 半田広宣のイデア論 ―]
   
   #v(10mm)
   #text(size: 9.5pt)[
