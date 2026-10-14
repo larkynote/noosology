@@ -50,10 +50,10 @@
 // --- 表紙ページ ---
 #align(center + horizon)[
   #v(-30mm)
-  #text(size: 11pt, fill: gray.darken(20%))[The Glossary of Noosology]
+  #text(size: 11pt, fill: gray.darken(20%))[ヌーソロジー非公式ファンブック]
   
   #v(10mm)
-  #text(size: 28pt, weight: "bold")[ヌーソロジー]
+  #text(size: 28pt, weight: "bold")[ヌーソロジー用語集]
   
   #v(5mm)
   #text(size: 14pt, tracking: 2pt)[― 半田広宣のイデア論 ―]
