@@ -294,3 +294,11 @@
   url: "https://x.com/kohsen/status/2041354914757288031?s=20",
   label-key: "handa-x-fig-ai-miru-mirareru"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [時間とは一様な物差しではない],
+  date: "2025/06/11",
+  url: "https://x.com/kohsen/status/1932693430179971231?s=20",
+  label-key: "handa-x-jikan-scale"
+)
