@@ -72,7 +72,7 @@
   #text(size: 12pt)[著者：ラーキー]
   
   #v(5mm)
-  #text(size: 9pt, fill: gray)[発行：Larky Note]
+  #text(size: 9pt, fill: gray)[発行：智慧の博覧会]
 ]
 
 #pagebreak()
@@ -122,7 +122,7 @@
   #text(size: 9.5pt)[
     発行日：2026年11月1日 初版発行\
     著者：ラーキー\
-    発行：Larky Note\
+    発行：智慧の博覧会\
     \
     #v(5mm)
     本書の無断転載・複製・公衆送信は常識の範囲でご自由にどうぞ。\
