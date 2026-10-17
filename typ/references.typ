@@ -302,3 +302,44 @@
   url: "https://x.com/kohsen/status/1932693430179971231?s=20",
   label-key: "handa-x-jikan-scale"
 )
+
+#bib-item(
+  author: "ウィキペディア (Wikipedia): フリー百科事典",
+  title: [大文字の他者],
+  note: [2026年6月6日 (土) 06:12 閲覧],
+  url: "https://ja.wikipedia.org/wiki/大文字の他者",
+  label-key: "wiki-oomoji-no-tasha"
+)
+
+#bib-item(
+  author: "ウィキペディア (Wikipedia): フリー百科事典",
+  title: [ジャック・ラカン],
+  note: [2026年7月22日 (水) 23:52 閲覧],
+  url: "https://ja.wikipedia.org/wiki/ジャック・ラカン",
+  label-key: "wiki-lacan"
+)
+
+#bib-item(
+  author: "ウィキペディア (Wikipedia): フリー百科事典",
+  title: [École de la cause freudienne
+],
+  note: [ 28 septembre 2026 à 14:51 閲覧],
+  url: "https://fr.wikipedia.org/wiki/École_de_la_cause_freudienne",
+  label-key: "wiki-ecf"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [今日のヌース用語　【思形】],
+  date: "2018/01/30",
+  url: "https://www.noos.ne.jp/cavesyndrome/?p=7820",
+  label-key: "handa-blog-7820"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [⚫︎時間と持続の関係について],
+  date: "2025/05/11",
+  url: "https://x.com/kohsen/status/1921368091403166061?s=20",
+  label-key: "handa-x-fig-nc-su2su2-space-time"
+)
