@@ -343,3 +343,19 @@
   url: "https://x.com/kohsen/status/1921368091403166061?s=20",
   label-key: "handa-x-fig-nc-su2su2-space-time"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [⚫︎ヌーソロジーから見たボゾンとフェルミオン],
+  date: "2023/09/18",
+  url: "https://x.com/kohsen/status/1703430751759618157?s=20",
+  label-key: "handa-x-fig-nc-enshin-hankan"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [⚫︎人間型ゲシュタルトと変換人型ゲシュタルトの対比],
+  date: "2023/10/10",
+  url: "https://x.com/kohsen/status/1711542459048800501?s=20",
+  label-key: "handa-x-fig-henkan-ningen"
+)
