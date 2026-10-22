@@ -359,3 +359,19 @@
   url: "https://x.com/kohsen/status/1711542459048800501?s=20",
   label-key: "handa-x-fig-henkan-ningen"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [顕在化のヌースと潜在化のヌース],
+  date: "2020/10/20",
+  url: "https://x.com/kohsen/status/1318407054877290496?s=20",
+  label-key: "handa-x-kenzai-senzai-noos"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [自己と他者はまったく違う生き物],
+  date: "2019/10/16",
+  url: "https://x.com/kohsen/status/1184365132370984960?s=20",
+  label-key: "handa-x-jiko-tasha-ikimono"
+)
