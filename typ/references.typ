@@ -375,3 +375,35 @@
   url: "https://x.com/kohsen/status/1184365132370984960?s=20",
   label-key: "handa-x-jiko-tasha-ikimono"
 )
+
+#bib-item(
+  author: "半田広宣",
+  title: [⚫︎円、重心、神、自己],
+  date: "2023/08/31",
+  url: "https://x.com/kohsen/status/1697067305556152324?s=20",
+  label-key: "handa-x-kami-jushin-u1"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [神とは重心],
+  date: "2022/11/16",
+  url: "https://x.com/kohsen/status/1592802229907783680?s=20",
+  label-key: "handa-x-kami-teigi-ocot"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [⚫︎重心、肉体、神、そして光],
+  date: "2023/09/05",
+  url: "https://x.com/kohsen/status/1698857976139039054?s=20",
+  label-key: "handa-x-kami-jushin-nikutai"
+)
+
+#bib-item(
+  author: "半田広宣",
+  title: [「重心は人間の意識に形質を与える力」],
+  date: "2017/11/08",
+  url: "https://x.com/kohsen/status/928093089322766336?s=20",
+  label-key: "handa-x-jushin-keishitsu-ttm"
+)
